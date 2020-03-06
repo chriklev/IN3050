@@ -1,0 +1,820 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+    \usepackage{iftex}
+    \ifPDFTeX
+    	\usepackage[T1]{fontenc}
+    	\usepackage{mathpazo}
+    \else
+    	\usepackage{fontspec}
+    \fi
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range
+    \makeatletter % fix for grffile with XeLaTeX
+    \def\Gread@@xetex#1{%
+      \IfFileExists{"\Gin@base".bb}%
+      {\Gread@eps{\Gin@base.bb}}%
+      {\Gread@@xetex@aux#1}%
+    }
+    \makeatother
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{assignment01\_solutions}
+    
+    
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb. 
+    \makeatletter
+        \newbox\Wrappedcontinuationbox 
+        \newbox\Wrappedvisiblespacebox 
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}} 
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}} 
+        \newcommand*\Wrappedcontinuationindent {3ex } 
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox} 
+        % Take advantage of the already applied Pygments mark-up to insert 
+        % potential linebreaks for TeX processing. 
+        %        {, <, #, %, $, ' and ": go to next line. 
+        %        _, }, ^, &, >, - and ~: stay at end of broken line. 
+        % Use of \textquotesingle for straight quote. 
+        \newcommand*\Wrappedbreaksatspecials {% 
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}% 
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}% 
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}% 
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}% 
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}% 
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}% 
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}% 
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}% 
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}% 
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}% 
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}% 
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}% 
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}% 
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}% 
+        } 
+        % Some characters . , ; ? ! / are not pygmentized. 
+        % This macro makes them "active" and they will insert potential linebreaks 
+        \newcommand*\Wrappedbreaksatpunct {% 
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}% 
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}% 
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}% 
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}% 
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}% 
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}% 
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}% 
+            \catcode`\.\active
+            \catcode`\,\active 
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active 
+            \lccode`\~`\~ 	
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+        
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active 	
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+    
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        \ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+
+    \title{IN3050 Assignment 1}
+    \author{Christoffer Kleven Berg (chriklev)}
+
+\begin{document}
+    
+    \maketitle
+    
+    \subsubsection*{Running the code}\label{running-the-code}
+
+Code can be found in \textbf{assignment01\_solutions.ipynb}. All code is
+tested with Python 3.6.9
+
+To run the code, you need Python 3 with numpy, matplotlib, pandas and
+jupyter installed.
+
+Some of the code blocks are dependant on imports or functions from other
+code blocks so they need to be ran in successive order.
+
+    \subsection*{Imports and data parsing}\label{imports-and-data-parsing}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{import} \PY{n+nn}{time}
+\PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k+kn}{as} \PY{n+nn}{pd}
+\PY{k+kn}{import} \PY{n+nn}{itertools} \PY{k+kn}{as} \PY{n+nn}{it}
+\PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k+kn}{as} \PY{n+nn}{np}
+\PY{k+kn}{import} \PY{n+nn}{numpy.random} \PY{k+kn}{as} \PY{n+nn}{rnd}
+\PY{k+kn}{import} \PY{n+nn}{matplotlib.pyplot} \PY{k+kn}{as} \PY{n+nn}{plt}
+
+\PY{c+c1}{\PYZsh{} Read distance data to Pandas data frame and convert it to Numpy ndarray}
+\PY{n}{city\PYZus{}distances} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{european\PYZus{}cities.csv}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{sep}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{;}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{o}{.}\PY{n}{to\PYZus{}numpy}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \newpage
+    \subsection*{Exhaustive Search}\label{exhaustive-search}
+
+I use itertools to genereate the permutations, but I exclude one city.
+Using the permutations for all the cities would lead to a lot of
+redundant solutions because it does not matter where you start in the
+circle. When I am calculating the distance of the path, i then account
+for the excluded city.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{get\PYZus{}shortest\PYZus{}permutation}\PY{p}{(}\PY{n}{cities}\PY{p}{,} \PY{n}{weights}\PY{o}{=}\PY{n}{city\PYZus{}distances}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} Variables for storing current shortest path}
+    \PY{n}{smallest\PYZus{}distance} \PY{o}{=} \PY{l+m+mi}{9999999}
+    \PY{n}{shortest\PYZus{}permutation} \PY{o}{=} \PY{n+nb+bp}{None}
+
+    \PY{c+c1}{\PYZsh{} Iterating over all permutations excluding the first city to avoid redundant solutions}
+    \PY{k}{for} \PY{n}{perm} \PY{o+ow}{in} \PY{n}{it}\PY{o}{.}\PY{n}{permutations}\PY{p}{(}\PY{n}{cities}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{:}\PY{p}{]}\PY{p}{)}\PY{p}{:}
+        \PY{c+c1}{\PYZsh{} Initializing a variable for summing up the distance and adding distances for the first city}
+        \PY{n}{distance} \PY{o}{=} \PY{n}{weights}\PY{p}{[}\PY{n}{cities}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{n}{perm}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{]} \PY{o}{+} \PY{n}{weights}\PY{p}{[}\PY{n}{perm}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{n}{cities}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{]}
+        \PY{c+c1}{\PYZsh{} Summing up the distances}
+        \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{n+nb}{len}\PY{p}{(}\PY{n}{perm}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+            \PY{n}{diff} \PY{o}{=} \PY{n}{weights}\PY{p}{[}\PY{n}{perm}\PY{p}{[}\PY{n}{i}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{n}{perm}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{]}
+            \PY{n}{distance} \PY{o}{+}\PY{o}{=} \PY{n}{diff}
+        \PY{c+c1}{\PYZsh{} If this is the shortest solution so far}
+        \PY{k}{if} \PY{n}{distance} \PY{o}{\PYZlt{}} \PY{n}{smallest\PYZus{}distance}\PY{p}{:}
+            \PY{c+c1}{\PYZsh{} Update values for shortest}
+            \PY{n}{smallest\PYZus{}distance} \PY{o}{=} \PY{n}{distance}
+            \PY{n}{shortest\PYZus{}permutation} \PY{o}{=} \PY{n}{perm}
+
+    \PY{k}{return} \PY{p}{(}\PY{n}{cities}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{p}{)} \PY{o}{+} \PY{n}{shortest\PYZus{}permutation}\PY{p}{,} \PY{n}{smallest\PYZus{}distance}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} List with different amount of cities to solve for}
+\PY{n}{ns} \PY{o}{=} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{11}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} Create Pandas data frame to store solutions conviniently}
+\PY{n}{columns} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Shortest path}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Shortest distance}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Computation time}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\PY{n}{exhaustive\PYZus{}solutions} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{columns}\PY{o}{=}\PY{n}{columns}\PY{p}{)}
+
+\PY{k}{for} \PY{n}{n} \PY{o+ow}{in} \PY{n}{ns}\PY{p}{:}
+    \PY{n}{city\PYZus{}indices} \PY{o}{=} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n}\PY{p}{)}
+
+    \PY{n}{t0} \PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)}
+    \PY{n}{perm}\PY{p}{,} \PY{n}{dist} \PY{o}{=} \PY{n}{get\PYZus{}shortest\PYZus{}permutation}\PY{p}{(}\PY{n}{city\PYZus{}indices}\PY{p}{,} \PY{n}{city\PYZus{}distances}\PY{p}{)}
+    \PY{n}{t} \PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n}{t0}
+    
+    \PY{n}{exhaustive\PYZus{}solutions}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{n}\PY{p}{]} \PY{o}{=} \PY{p}{[}\PY{n}{perm}\PY{p}{,} \PY{n}{dist}\PY{p}{,} \PY{n}{t}\PY{p}{]}
+
+\PY{n}{exhaustive\PYZus{}solutions}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+                     Shortest path  Shortest distance  Computation time
+2                           (0, 1)            3056.26          0.000019
+3                        (0, 1, 2)            4024.99          0.000018
+4                     (0, 1, 2, 3)            4241.89          0.000028
+5                  (0, 1, 4, 2, 3)            4983.38          0.000082
+6               (0, 1, 4, 5, 2, 3)            5018.81          0.000306
+7            (0, 1, 4, 5, 2, 6, 3)            5487.89          0.002259
+8         (0, 1, 4, 5, 2, 6, 3, 7)            6667.49          0.015552
+9      (0, 1, 4, 5, 2, 6, 8, 3, 7)            6678.55          0.121821
+10  (0, 1, 9, 4, 5, 2, 6, 8, 3, 7)            7486.31          1.207400
+\end{Verbatim}
+\end{tcolorbox}
+        
+    \subsubsection*{For 24 cities}\label{for-24-cities}
+
+The exhaustive search algorthm works by iterating over all permuations
+excluding one city. Witch means that if \(n\) is number of cities,
+number of iterations are \((n-1)!\). For each loop it iterates over each
+city. This gives the algorithm a time complexity of
+\(O((n-1)! n) = O(n!)\). We can therefor assume a linear relationship
+between \(n!\) and used time. Taking advantage of this assumption, I fit
+a linear model to the time data, and extrapolate to estimate time for
+\(n=24\).
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{c+c1}{\PYZsh{} I am assuming a linear relationship between number of permutations and computation time}
+\PY{n}{x} \PY{o}{=} \PY{p}{[}\PY{n}{np}\PY{o}{.}\PY{n}{math}\PY{o}{.}\PY{n}{factorial}\PY{p}{(}\PY{n}{i}\PY{p}{)} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n}{exhaustive\PYZus{}solutions}\PY{o}{.}\PY{n}{index}\PY{o}{.}\PY{n}{values}\PY{p}{]}
+\PY{n}{y} \PY{o}{=} \PY{n}{exhaustive\PYZus{}solutions}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Computation time}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\PY{n}{beta} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{polyfit}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}
+
+\PY{c+c1}{\PYZsh{} Extrapolating the model to estimate time for 24 cities with 24! permutations}
+\PY{n}{time\PYZus{}all\PYZus{}cities} \PY{o}{=} \PY{n}{beta}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{o}{*}\PY{n}{np}\PY{o}{.}\PY{n}{math}\PY{o}{.}\PY{n}{factorial}\PY{p}{(}\PY{l+m+mi}{24}\PY{p}{)} \PY{o}{+} \PY{n}{beta}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}
+\PY{k}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Estimated time for all cities is }\PY{l+s+si}{\PYZpc{}.2e}\PY{l+s+s2}{ years}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{p}{(}\PY{n}{time\PYZus{}all\PYZus{}cities}\PY{o}{/}\PY{l+m+mi}{60}\PY{o}{/}\PY{l+m+mi}{60}\PY{o}{/}\PY{l+m+mi}{24}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Estimated time for all cities is 2.38e+12 years
+    \end{Verbatim}
+
+    \newpage
+    \subsection*{Hill climb}\label{hill-climb}
+
+My hill climbing algorithm works by swapping random cities and seeing if
+the new path is better. When it has tried a certain amount of swaps
+without finding a better solution, it terminates.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{23}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{hill\PYZus{}climb}\PY{p}{(}\PY{n}{position}\PY{p}{,} \PY{n}{distances}\PY{p}{,} \PY{n}{accuracy}\PY{p}{)}\PY{p}{:}
+        \PY{n}{count} \PY{o}{=} \PY{l+m+mi}{0}
+        \PY{n}{current\PYZus{}distance} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{distances}\PY{p}{[}\PY{n}{position}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{roll}\PY{p}{(}\PY{n}{position}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}\PY{p}{]}\PY{p}{)}
+        \PY{k}{while} \PY{n}{count} \PY{o}{\PYZlt{}} \PY{n}{accuracy}\PY{p}{:}
+            \PY{n}{i} \PY{o}{=} \PY{n}{rnd}\PY{o}{.}\PY{n}{randint}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{position}\PY{p}{)}\PY{p}{,} \PY{n}{size}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{)}
+            \PY{n}{new\PYZus{}position} \PY{o}{=} \PY{n}{position}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+            \PY{n}{new\PYZus{}position}\PY{p}{[}\PY{n}{i}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{]} \PY{o}{=} \PY{n}{position}\PY{p}{[}\PY{n}{i}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{]}
+            \PY{n}{new\PYZus{}position}\PY{p}{[}\PY{n}{i}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{]} \PY{o}{=} \PY{n}{position}\PY{p}{[}\PY{n}{i}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{]}
+            \PY{n}{new\PYZus{}distance} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{distances}\PY{p}{[}\PY{n}{new\PYZus{}position}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{roll}\PY{p}{(}\PY{n}{new\PYZus{}position}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}\PY{p}{]}\PY{p}{)}
+
+            \PY{k}{if} \PY{n}{new\PYZus{}distance} \PY{o}{\PYZlt{}} \PY{n}{current\PYZus{}distance}\PY{p}{:}
+                \PY{n}{position} \PY{o}{=} \PY{n}{new\PYZus{}position}
+                \PY{n}{current\PYZus{}distance} \PY{o}{=} \PY{n}{new\PYZus{}distance}
+                \PY{n}{count} \PY{o}{=} \PY{l+m+mi}{0}
+            \PY{k}{else}\PY{p}{:}
+                \PY{n}{count} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+        \PY{k}{return} \PY{n}{position}\PY{p}{,} \PY{n}{current\PYZus{}distance}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{24}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{rnd}\PY{o}{.}\PY{n}{seed}\PY{p}{(}\PY{l+m+mi}{3050}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} Number of cities (requires: 2 \PYZlt{}= n \PYZlt{}= 24)}
+\PY{n}{ns} \PY{o}{=} \PY{n+nb}{list}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{11}\PY{p}{)}\PY{p}{)} \PY{o}{+} \PY{p}{[}\PY{l+m+mi}{24}\PY{p}{]}
+\PY{c+c1}{\PYZsh{} Number of starting seeds}
+\PY{n}{n\PYZus{}starts} \PY{o}{=} \PY{l+m+mi}{20}
+\PY{c+c1}{\PYZsh{} Pandas data frame for storing solution data}
+\PY{n}{columns} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{n\PYZus{}starts}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Best}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Worst}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mean}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Standerd deviation}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Time}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\PY{n}{hill\PYZus{}climb\PYZus{}solutions} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{columns}\PY{o}{=}\PY{n}{columns}\PY{p}{)}
+
+\PY{k}{for} \PY{n}{n} \PY{o+ow}{in} \PY{n}{ns}\PY{p}{:}
+    \PY{n}{distances} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{empty}\PY{p}{(}\PY{n}{n\PYZus{}starts}\PY{p}{)}
+    
+    \PY{n}{t0} \PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)}
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n\PYZus{}starts}\PY{p}{)}\PY{p}{:}
+        \PY{n}{position} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n}{n}\PY{p}{)}
+        \PY{n}{rnd}\PY{o}{.}\PY{n}{shuffle}\PY{p}{(}\PY{n}{position}\PY{p}{)}
+        \PY{n}{pos}\PY{p}{,} \PY{n}{dist} \PY{o}{=} \PY{n}{hill\PYZus{}climb}\PY{p}{(}\PY{n}{position}\PY{p}{,} \PY{n}{city\PYZus{}distances}\PY{p}{,} \PY{l+m+mi}{1000}\PY{p}{)}
+        \PY{n}{distances}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{=} \PY{n}{dist}
+    \PY{n}{t} \PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n}{t0}
+
+    \PY{n}{hill\PYZus{}climb\PYZus{}solutions}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{n}\PY{p}{]} \PY{o}{=} \PY{p}{[}
+        \PY{n}{n\PYZus{}starts}\PY{p}{,} \PY{n}{distances}\PY{o}{.}\PY{n}{min}\PY{p}{(}\PY{p}{)}\PY{p}{,} \PY{n}{distances}\PY{o}{.}\PY{n}{max}\PY{p}{(}\PY{p}{)}\PY{p}{,}
+        \PY{n}{distances}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{p}{)}\PY{p}{,} \PY{n}{distances}\PY{o}{.}\PY{n}{std}\PY{p}{(}\PY{n}{ddof}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{,} \PY{n}{t}\PY{p}{]}
+
+\PY{n}{hill\PYZus{}climb\PYZus{}solutions}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{24}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+    n\_starts      Best     Worst       Mean  Standerd deviation      Time
+2       20.0   3056.26   3056.26   3056.260        4.665609e-13  0.491316
+3       20.0   4024.99   4024.99   4024.990        9.331219e-13  0.483288
+4       20.0   4241.89   4241.89   4241.890        0.000000e+00  0.471493
+5       20.0   4983.38   4983.38   4983.380        1.794896e-12  0.480127
+6       20.0   5018.81   5018.81   5018.810        8.081072e-13  0.501518
+7       20.0   5487.89   5487.89   5487.890        8.602959e-13  0.492679
+8       20.0   6667.49   6667.49   6667.490        9.331219e-13  0.506648
+9       20.0   6678.55   7539.18   6764.613        2.648963e+02  0.509251
+10      20.0   7486.31   8419.09   7754.301        3.370223e+02  0.532080
+24      20.0  12287.07  16145.95  14140.772        9.783227e+02  1.135483
+\end{Verbatim}
+\end{tcolorbox}
+        
+    My hill climber algorithm is slower than exhaustive search for the first
+9 cities, but finds the right solutions. After \(n=10\) the hill climber
+starts beeing faster but does not find the best solution for all \(n\).
+All soulutions are pretty good estimates and the hill climber is never
+too far from the shortest possible distance. Table for distance
+statistics are above indexed by \(n\).
+
+    \subsection*{Genetic Algorithm}\label{genetic-algorithm}
+
+For selecting parents I use fitness-proportionate selection, but first I
+cube the fitness scores because I found the selecten to not be selective
+enough with just the normal proportions. With a population of \(n_p\) I
+select \(n_p\) parents with replacement, and pair them up. Each pair of
+parents produce one child by partially mapped crossover and every child
+is mutated by swap mutation. I suspect that insert mutation would work
+better as it keeps more of the adjacency properties, but I did not take
+the time to implement it.
+
+I am then left with \(\frac{3}{2}n_p\) individuals for survivor
+selection. In survivor selection I again use fitness-proportionate
+selection with cubed scores, but I also have an elite of the three best
+individuals that are guaranteed to survive.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{def} \PY{n+nf}{evolutionary\PYZus{}alg}\PY{p}{(}\PY{n}{cities}\PY{p}{,} \PY{n}{pop\PYZus{}size}\PY{p}{,} \PY{n}{n\PYZus{}cycles}\PY{p}{,} \PY{n}{distances}\PY{p}{,} \PY{n}{parent\PYZus{}rate} \PY{o}{=} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{replace\PYZus{}parents}\PY{o}{=}\PY{n+nb+bp}{True}\PY{p}{)}\PY{p}{:}
+    \PY{c+c1}{\PYZsh{} No odd numbers please}
+    \PY{k}{assert} \PY{n}{pop\PYZus{}size} \PY{o}{\PYZpc{}} \PY{l+m+mi}{2} \PY{o}{==} \PY{l+m+mi}{0}
+
+    \PY{n}{n\PYZus{}parents} \PY{o}{=} \PY{n+nb}{int}\PY{p}{(}\PY{n}{pop\PYZus{}size} \PY{o}{*} \PY{n}{parent\PYZus{}rate}\PY{p}{)}
+    \PY{n}{n\PYZus{}parents} \PY{o}{\PYZhy{}}\PY{o}{=} \PY{n}{n\PYZus{}parents}\PY{o}{\PYZpc{}}\PY{l+m+mi}{2}
+    \PY{n}{n\PYZus{}pairs} \PY{o}{=} \PY{n}{n\PYZus{}parents} \PY{o}{/}\PY{o}{/} \PY{l+m+mi}{2}
+    \PY{n}{n\PYZus{}cities} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{cities}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Array for storing fittest individual of each run}
+    \PY{n}{best\PYZus{}by\PYZus{}gen} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{empty}\PY{p}{(}\PY{n}{n\PYZus{}cycles}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Create random starting population}
+    \PY{n}{population} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{empty}\PY{p}{(}\PY{p}{(}\PY{n}{pop\PYZus{}size}\PY{p}{,} \PY{n}{n}\PY{p}{)}\PY{p}{,} \PY{n}{dtype}\PY{o}{=}\PY{n+nb}{int}\PY{p}{)}
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{pop\PYZus{}size}\PY{p}{)}\PY{p}{:}
+        \PY{n}{population}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{=} \PY{n}{rnd}\PY{o}{.}\PY{n}{permutation}\PY{p}{(}\PY{n}{cities}\PY{p}{)}
+
+    \PY{c+c1}{\PYZsh{} Find distance of all paths in population}
+    \PY{n}{find\PYZus{}distance} \PY{o}{=} \PY{k}{lambda} \PY{n}{path}\PY{p}{:} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{distances}\PY{p}{[}\PY{n}{path}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{roll}\PY{p}{(}\PY{n}{path}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}\PY{p}{]}\PY{p}{)}
+    \PY{n}{scores} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{apply\PYZus{}along\PYZus{}axis}\PY{p}{(}\PY{n}{find\PYZus{}distance}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{population}\PY{p}{)}
+
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n\PYZus{}cycles}\PY{p}{)}\PY{p}{:}
+        \PY{c+c1}{\PYZsh{} Choose parents}
+        \PY{n}{inv\PYZus{}scores} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{power}\PY{p}{(}\PY{l+m+mi}{1}\PY{o}{/}\PY{n}{scores}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{)}
+        \PY{n}{portions} \PY{o}{=} \PY{n}{inv\PYZus{}scores}\PY{o}{/}\PY{n}{inv\PYZus{}scores}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{)}
+        \PY{n}{i\PYZus{}parents} \PY{o}{=} \PY{n}{rnd}\PY{o}{.}\PY{n}{choice}\PY{p}{(}\PY{n}{pop\PYZus{}size}\PY{p}{,} \PY{n}{size}\PY{o}{=}\PY{n}{n\PYZus{}parents}\PY{p}{,} \PY{n}{replace}\PY{o}{=}\PY{n}{replace\PYZus{}parents}\PY{p}{,} \PY{n}{p}\PY{o}{=}\PY{n}{portions}\PY{p}{)}
+        \PY{c+c1}{\PYZsh{} Get parents from index and reshape to 3D array for easier iteration over pairs}
+        \PY{n}{parents} \PY{o}{=} \PY{n}{population}\PY{p}{[}\PY{n}{i\PYZus{}parents}\PY{p}{]}\PY{o}{.}\PY{n}{reshape}\PY{p}{(}\PY{n}{n\PYZus{}pairs}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{n}{n\PYZus{}cities}\PY{p}{)}
+        
+        \PY{c+c1}{\PYZsh{} Get children}
+        \PY{n}{children} \PY{o}{=} \PY{n}{create\PYZus{}children\PYZus{}pmx}\PY{p}{(}\PY{n}{parents}\PY{p}{,} \PY{n}{n\PYZus{}pairs}\PY{p}{,} \PY{n}{n\PYZus{}cities}\PY{p}{)}
+        \PY{c+c1}{\PYZsh{} Mutate children}
+        \PY{n}{mutate\PYZus{}children\PYZus{}swap}\PY{p}{(}\PY{n}{children}\PY{p}{)}
+
+        \PY{c+c1}{\PYZsh{} Select new population}
+        \PY{n}{population}\PY{p}{,} \PY{n}{scores} \PY{o}{=} \PY{n}{select\PYZus{}new\PYZus{}population}\PY{p}{(}\PY{n}{population}\PY{p}{,} \PY{n}{children}\PY{p}{,} \PY{n}{scores}\PY{p}{,} \PY{n}{distances}\PY{p}{)}
+        \PY{n}{best\PYZus{}by\PYZus{}gen}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{=} \PY{n}{scores}\PY{o}{.}\PY{n}{min}\PY{p}{(}\PY{p}{)}
+    \PY{k}{return} \PY{n}{best\PYZus{}by\PYZus{}gen}
+
+
+\PY{k}{def} \PY{n+nf}{select\PYZus{}new\PYZus{}population}\PY{p}{(}\PY{n}{population}\PY{p}{,} \PY{n}{children}\PY{p}{,} \PY{n}{prev\PYZus{}scores}\PY{p}{,} \PY{n}{distances}\PY{p}{,} \PY{n}{elite\PYZus{}size} \PY{o}{=} \PY{l+m+mi}{3}\PY{p}{)}\PY{p}{:}
+    \PY{n}{total\PYZus{}population} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{concatenate}\PY{p}{(}\PY{p}{(}\PY{n}{population}\PY{p}{,} \PY{n}{children}\PY{p}{)}\PY{p}{)}
+
+    \PY{n}{find\PYZus{}distance} \PY{o}{=} \PY{k}{lambda} \PY{n}{path}\PY{p}{:} \PY{n}{np}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{distances}\PY{p}{[}\PY{n}{path}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{roll}\PY{p}{(}\PY{n}{path}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{)}\PY{p}{]}\PY{p}{)}
+    \PY{n}{children\PYZus{}scores} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{apply\PYZus{}along\PYZus{}axis}\PY{p}{(}\PY{n}{find\PYZus{}distance}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{children}\PY{p}{)}
+    \PY{n}{scores} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{concatenate}\PY{p}{(}\PY{p}{(}\PY{n}{prev\PYZus{}scores}\PY{p}{,} \PY{n}{children\PYZus{}scores}\PY{p}{)}\PY{p}{)}
+
+    \PY{n}{i\PYZus{}sort} \PY{o}{=} \PY{n}{scores}\PY{o}{.}\PY{n}{argsort}\PY{p}{(}\PY{p}{)}
+    \PY{n}{i\PYZus{}elite} \PY{o}{=} \PY{n}{i\PYZus{}sort}\PY{p}{[}\PY{p}{:}\PY{n}{elite\PYZus{}size}\PY{p}{]}
+    \PY{n}{i\PYZus{}not\PYZus{}elite} \PY{o}{=} \PY{n}{i\PYZus{}sort}\PY{p}{[}\PY{n}{elite\PYZus{}size}\PY{p}{:}\PY{p}{]}
+
+    \PY{n}{inv\PYZus{}scores} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{power}\PY{p}{(}\PY{l+m+mi}{1}\PY{o}{/}\PY{n}{scores}\PY{p}{[}\PY{n}{i\PYZus{}not\PYZus{}elite}\PY{p}{]}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{)}
+    \PY{n}{portions} \PY{o}{=} \PY{n}{inv\PYZus{}scores}\PY{o}{/}\PY{n}{inv\PYZus{}scores}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{)}
+    \PY{n}{i\PYZus{}norm\PYZus{}pop} \PY{o}{=} \PY{n}{rnd}\PY{o}{.}\PY{n}{choice}\PY{p}{(}
+        \PY{n}{i\PYZus{}not\PYZus{}elite}\PY{p}{,} \PY{n}{population}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{elite\PYZus{}size}\PY{p}{,} \PY{n}{replace}\PY{o}{=}\PY{n+nb+bp}{False}\PY{p}{,} \PY{n}{p}\PY{o}{=}\PY{n}{portions}\PY{p}{)}
+    \PY{n}{i\PYZus{}pop} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{concatenate}\PY{p}{(}\PY{p}{(}\PY{n}{i\PYZus{}norm\PYZus{}pop}\PY{p}{,} \PY{n}{i\PYZus{}elite}\PY{p}{)}\PY{p}{)}
+    \PY{k}{return} \PY{n}{total\PYZus{}population}\PY{p}{[}\PY{n}{i\PYZus{}pop}\PY{p}{]}\PY{p}{,} \PY{n}{scores}\PY{p}{[}\PY{n}{i\PYZus{}pop}\PY{p}{]}
+
+
+\PY{k}{def} \PY{n+nf}{mutate\PYZus{}children\PYZus{}swap}\PY{p}{(}\PY{n}{children}\PY{p}{)}\PY{p}{:}
+    \PY{k}{for} \PY{n}{child} \PY{o+ow}{in} \PY{n}{children}\PY{p}{:}
+        \PY{n}{i} \PY{o}{=} \PY{n}{rnd}\PY{o}{.}\PY{n}{choice}\PY{p}{(}\PY{n}{child}\PY{o}{.}\PY{n}{size}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{n}{replace}\PY{o}{=}\PY{n+nb+bp}{False}\PY{p}{)}
+        \PY{n}{child}\PY{p}{[}\PY{n}{i}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{]}\PY{p}{,} \PY{n}{child}\PY{p}{[}\PY{n}{i}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{]} \PY{o}{=} \PY{n}{child}\PY{p}{[}\PY{n}{i}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{]}\PY{p}{,} \PY{n}{child}\PY{p}{[}\PY{n}{i}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{]}
+
+
+\PY{k}{def} \PY{n+nf}{create\PYZus{}children\PYZus{}pmx}\PY{p}{(}\PY{n}{parents}\PY{p}{,} \PY{n}{n\PYZus{}pairs}\PY{p}{,} \PY{n}{n\PYZus{}cities}\PY{p}{)}\PY{p}{:}
+    \PY{n}{segment\PYZus{}size} \PY{o}{=} \PY{n}{n\PYZus{}cities} \PY{o}{/}\PY{o}{/} \PY{l+m+mi}{2}
+    \PY{c+c1}{\PYZsh{} Starting indices of each segment}
+    \PY{n}{start\PYZus{}segments} \PY{o}{=} \PY{n}{rnd}\PY{o}{.}\PY{n}{randint}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{n\PYZus{}cities}\PY{p}{,} \PY{n}{size}\PY{o}{=}\PY{n}{n\PYZus{}pairs}\PY{p}{)}
+    \PY{c+c1}{\PYZsh{} Copy genes from parent 1}
+    \PY{n}{children} \PY{o}{=} \PY{n}{parents}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{copy}\PY{p}{(}\PY{p}{)}
+    \PY{c+c1}{\PYZsh{} For each pair of parents}
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n\PYZus{}pairs}\PY{p}{)}\PY{p}{:}
+        \PY{c+c1}{\PYZsh{} Indices of segment to copy from parent 0, with rollover for out of bounds indices}
+        \PY{n}{i\PYZus{}segment} \PY{o}{=} \PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n}{segment\PYZus{}size}\PY{p}{)} \PY{o}{+} \PY{n}{start\PYZus{}segments}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)} \PY{o}{\PYZpc{}} \PY{n}{n\PYZus{}cities}
+
+        \PY{n}{children}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{n}{i\PYZus{}segment}\PY{p}{]} \PY{o}{=} \PY{n}{parents}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{n}{i\PYZus{}segment}\PY{p}{]}
+
+        \PY{c+c1}{\PYZsh{} For each index in segment}
+        \PY{k}{for} \PY{n}{j} \PY{o+ow}{in} \PY{n}{i\PYZus{}segment}\PY{p}{:}
+            \PY{c+c1}{\PYZsh{} If the replaced value is not in the segment it was replaced by }
+            \PY{k}{if} \PY{n}{parents}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{j}\PY{p}{]} \PY{o+ow}{not} \PY{o+ow}{in} \PY{n}{parents}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{n}{i\PYZus{}segment}\PY{p}{]}\PY{p}{:}
+                \PY{n}{k} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{parents}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]} \PY{o}{==} \PY{n}{parents}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{n}{j}\PY{p}{]}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+                \PY{k}{while} \PY{n}{k} \PY{o+ow}{in} \PY{n}{i\PYZus{}segment}\PY{p}{:}
+                    \PY{n}{k} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{where}\PY{p}{(}\PY{n}{parents}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]} \PY{o}{==} \PY{n}{parents}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{n}{k}\PY{p}{]}\PY{p}{)}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}
+                \PY{n}{children}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{n}{k}\PY{p}{]} \PY{o}{=} \PY{n}{parents}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{j}\PY{p}{]}
+    \PY{k}{return} \PY{n}{children}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{rnd}\PY{o}{.}\PY{n}{seed}\PY{p}{(}\PY{l+m+mi}{3150}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} Number of cities}
+\PY{n}{n} \PY{o}{=} \PY{l+m+mi}{24}
+\PY{n}{cities} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n}{n}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} Size of population}
+\PY{n}{pop\PYZus{}sizes} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{20}\PY{p}{,} \PY{l+m+mi}{50}\PY{p}{,} \PY{l+m+mi}{100}\PY{p}{]}
+\PY{c+c1}{\PYZsh{} Number of generations}
+\PY{n}{n\PYZus{}cycles} \PY{o}{=} \PY{l+m+mi}{500}
+\PY{c+c1}{\PYZsh{} Number of runs}
+\PY{n}{n\PYZus{}runs} \PY{o}{=} \PY{l+m+mi}{20}
+\PY{c+c1}{\PYZsh{} Pandas data frame for storing solution data}
+\PY{n}{columns} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Cycles}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Best}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Worst}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mean}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Standerd deviation}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Time [s]}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\PY{n}{genetic\PYZus{}alg\PYZus{}solutions} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{columns}\PY{o}{=}\PY{n}{columns}\PY{p}{)}
+
+\PY{k}{for} \PY{n}{pop\PYZus{}size} \PY{o+ow}{in} \PY{n}{pop\PYZus{}sizes}\PY{p}{:}
+    \PY{n}{best\PYZus{}scores} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{empty}\PY{p}{(}\PY{p}{(}\PY{n}{n\PYZus{}runs}\PY{p}{,} \PY{n}{n\PYZus{}cycles}\PY{p}{)}\PY{p}{)}
+    \PY{n}{t0} \PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)}
+    \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n\PYZus{}runs}\PY{p}{)}\PY{p}{:}
+        \PY{n}{best\PYZus{}scores}\PY{p}{[}\PY{n}{i}\PY{p}{]} \PY{o}{=} \PY{n}{evolutionary\PYZus{}alg}\PY{p}{(}\PY{n}{cities}\PY{p}{,} \PY{n}{pop\PYZus{}size}\PY{p}{,} \PY{n}{n\PYZus{}cycles}\PY{p}{,} \PY{n}{city\PYZus{}distances}\PY{p}{)}
+    \PY{n}{t} \PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n}{t0}
+
+    \PY{n}{plt}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n}{n\PYZus{}cycles}\PY{p}{)}\PY{p}{,} \PY{n}{best\PYZus{}scores}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{)}\PY{p}{,} \PY{n}{label}\PY{o}{=}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{pop\PYZus{}size: }\PY{l+s+si}{\PYZpc{}d}\PY{l+s+s2}{\PYZdq{}} \PY{o}{\PYZpc{}} \PY{n}{pop\PYZus{}size}\PY{p}{)}\PY{p}{)}
+    \PY{n}{best\PYZus{}scores} \PY{o}{=} \PY{n}{best\PYZus{}scores}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}
+    \PY{n}{genetic\PYZus{}alg\PYZus{}solutions}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{pop\PYZus{}size}\PY{p}{]} \PY{o}{=} \PY{p}{[}
+        \PY{n}{n\PYZus{}cycles}\PY{p}{,} \PY{n}{best\PYZus{}scores}\PY{o}{.}\PY{n}{min}\PY{p}{(}\PY{p}{)}\PY{p}{,} \PY{n}{best\PYZus{}scores}\PY{o}{.}\PY{n}{max}\PY{p}{(}\PY{p}{)}\PY{p}{,}
+        \PY{n}{best\PYZus{}scores}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{p}{)}\PY{p}{,} \PY{n}{best\PYZus{}scores}\PY{o}{.}\PY{n}{std}\PY{p}{(}\PY{n}{ddof}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{,} \PY{n}{t}\PY{p}{]}
+
+\PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{)}
+\PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\PY{n}{genetic\PYZus{}alg\PYZus{}solutions}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{assignment01_solutions_files/assignment01_solutions_15_0.pdf}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+     Cycles      Best     Worst        Mean  Standerd deviation   Time [s]
+20    500.0  12682.17  15614.78  14101.2200          731.389453  21.255996
+50    500.0  12396.32  14668.41  13631.7545          703.779767  48.882465
+100   500.0  12536.76  14717.86  13387.6445          584.607152  96.583960
+\end{Verbatim}
+\end{tcolorbox}
+        
+    The plot above shows best fittnes for each generation avareged over
+runs. The three different plots, are simulations with different
+population size. The table above shows the statistics of the final
+solutions for each run, indexed by population size.
+
+We can see that the solution improves significantly by going from a
+population of 20 to 50, but the only thing that improves significantly
+from 50 to 100 is variation. If I had to pick one of these three I would
+choose 50 because the small improvements in results are not worth the
+doubbling in computation time. However trying 60 or 70 might be
+interesting to minimize variation.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n}{rnd}\PY{o}{.}\PY{n}{seed}\PY{p}{(}\PY{l+m+mi}{3150}\PY{p}{)}
+\PY{c+c1}{\PYZsh{} Number of cities}
+\PY{n}{ns} \PY{o}{=} \PY{n+nb}{list}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{11}\PY{p}{)}\PY{p}{)} \PY{o}{+} \PY{p}{[}\PY{l+m+mi}{24}\PY{p}{]}
+\PY{c+c1}{\PYZsh{} Size of population}
+\PY{n}{pop\PYZus{}sizes} \PY{o}{=} \PY{l+m+mi}{50}
+\PY{c+c1}{\PYZsh{} Number of generations}
+\PY{n}{n\PYZus{}cycles} \PY{o}{=} \PY{l+m+mi}{500}
+\PY{c+c1}{\PYZsh{} Pandas data frame for storing solution data}
+\PY{n}{columns} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Distance}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Time [s]}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Inspected tours}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{(n\PYZhy{}1)!}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\PY{n}{genetic\PYZus{}alg\PYZus{}solutions\PYZus{}2} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{columns}\PY{o}{=}\PY{n}{columns}\PY{p}{)}
+
+\PY{k}{for} \PY{n}{n} \PY{o+ow}{in} \PY{n}{ns}\PY{p}{:}
+    \PY{n}{cities} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n}{n}\PY{p}{)}
+    
+    \PY{n}{t0} \PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)}
+    \PY{n}{best\PYZus{}scores} \PY{o}{=} \PY{n}{evolutionary\PYZus{}alg}\PY{p}{(}\PY{n}{cities}\PY{p}{,} \PY{n}{pop\PYZus{}size}\PY{p}{,} \PY{n}{n\PYZus{}cycles}\PY{p}{,} \PY{n}{city\PYZus{}distances}\PY{p}{)}
+    \PY{n}{t} \PY{o}{=} \PY{n}{time}\PY{o}{.}\PY{n}{time}\PY{p}{(}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n}{t0}
+
+    \PY{c+c1}{\PYZsh{} For each cycle it introduces pop\PYZus{}size//2 new individuals}
+    \PY{n}{inspected\PYZus{}tours} \PY{o}{=} \PY{n}{pop\PYZus{}size} \PY{o}{+} \PY{n}{pop\PYZus{}size} \PY{o}{/}\PY{o}{/} \PY{l+m+mi}{2} \PY{o}{*} \PY{n}{n\PYZus{}cycles}
+    \PY{n}{genetic\PYZus{}alg\PYZus{}solutions\PYZus{}2}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{n}\PY{p}{]} \PY{o}{=} \PY{p}{[}\PY{n}{best\PYZus{}scores}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{,} \PY{n}{t}\PY{p}{,} \PY{n}{inspected\PYZus{}tours}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{math}\PY{o}{.}\PY{n}{factorial}\PY{p}{(}\PY{n}{n}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{]}
+
+\PY{n}{genetic\PYZus{}alg\PYZus{}solutions\PYZus{}2}
+\end{Verbatim}
+\end{tcolorbox}
+
+            \begin{tcolorbox}[breakable, size=fbox, boxrule=.5pt, pad at break*=1mm, opacityfill=0]
+\prompt{Out}{outcolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+    Distance  Time [s]  Inspected tours                   (n-1)!
+2    3056.26  2.586313          25100.0                        1
+3    4024.99  2.859653          25100.0                        2
+4    4241.89  2.855223          25100.0                        6
+5    4983.38  3.301100          25100.0                       24
+6    5018.81  3.473626          25100.0                      120
+7    5487.89  3.163379          25100.0                      720
+8    6667.49  3.303437          25100.0                     5040
+9    6678.55  3.243750          25100.0                    40320
+10   7486.31  3.446489          25100.0                   362880
+24  13019.43  4.741485          25100.0  25852016738884976640000
+\end{Verbatim}
+\end{tcolorbox}
+        
+    The table above shows solutions for the genetic algorithm ran once,
+indexed by number of cities. For \(n \leq 10\) the genetic algorithm
+finds the correct solution, but uses a lot more time. For \(n=24\) the
+genetic algorithm comes reasonably close and executes in a reasonable
+time, unlike the exhaustive search. The two last columns show number of
+tours inspected by the GA and exhaustive search respectivly. For
+\(n < 9\) the GA inspects way more tours and is obviously worse. For
+\(n \geq 9\) number of tours the exhaustive search has to inspect
+increases rapidly, but for the GA it stays the same.
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}

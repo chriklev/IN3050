@@ -1,0 +1,12 @@
+name: in3050
+channels:
+  - defaults
+dependencies:
+  - python=3.7
+  - numpy
+  - matplotlib
+  - pandas
+  - scikit-learn
+  - jupyter
+  - pip:
+    - tensorflow
