@@ -15,28 +15,25 @@ class NumpyLinReg():
         self.x = X_train
         self.y = t_train
 
-    def fit(self, poly_deg=3, gamma=0.00001, epochs=1):
+    def fit(self, poly_deg, gamma, epochs):
+        # Make design matrix
         self.des_mat = np.empty((self.x.size, poly_deg+1))
         for p in range(poly_deg+1):
             self.des_mat[:, p] = self.x**p
 
         # Generate random starting positions
-        starts = rand(epochs, poly_deg+1) * 20 - 10
-        for start in starts:
-            self.steps = self.gradient_descent(start, gamma)
+        start = rand(poly_deg+1) * 20 - 10
+        self.steps = self.gradient_descent(start, gamma, epochs)
         self.weights = self.steps[-1]
-        print(self.weights)
 
-    def gradient_descent(self, start, gamma, precision=0.0001):
+    def gradient_descent(self, start, gamma, epochs):
         steps = [start]
-        df = gamma * 2 * np.mean(
-            (self.des_mat@start - self.y) * self.des_mat.T, axis=1)
-        while np.any(df > precision):
-            start -= df
-            steps.append(start.copy())
+        for i in range(epochs):
             df = gamma * 2 * np.mean(
                 (self.des_mat@start - self.y) * self.des_mat.T, axis=1)
-        return steps
+            start -= df
+            steps.append(start.copy())
+        return np.array(steps)
 
     def predict(self, x, step=-1):
         y = np.zeros(len(x))
@@ -45,7 +42,7 @@ class NumpyLinReg():
 
 
 if __name__ == "__main__":
-    seed(100169)
+    seed(3050)
 
     def f(x):
         return -6*x**3 + x**2 - 3*x + 5
@@ -59,8 +56,12 @@ if __name__ == "__main__":
     y = f(x) + noise
 
     lin_reg = NumpyLinReg(x, y)
-    lin_reg.fit(poly_deg=6)
-    print(len(lin_reg.steps))
+    poly_deg = 3
+    gamma = 0.00001
+    epochs = 400
+    lin_reg.fit(poly_deg, gamma, epochs)
+    n_steps = len(lin_reg.steps)
+    print(n_steps)
 
     # Plotting
     fig, ax = plt.subplots()
@@ -80,9 +81,9 @@ if __name__ == "__main__":
         return line
 
     # create animation using the animate() function
-    myAnimation = animation.FuncAnimation(fig, animate, frames=len(lin_reg.steps),
+    myAnimation = animation.FuncAnimation(fig, animate, frames=range(0, n_steps, n_steps//400),
                                           fargs=(lin_reg.steps,), interval=1, blit=False, repeat=True)
 
-    #myAnimation.save('poly2.gif', writer='imagemagick')
+    # myAnimation.save('poly%d.gif' % poly_deg, writer='imagemagick')
 
     plt.show()
