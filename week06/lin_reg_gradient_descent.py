@@ -5,7 +5,7 @@ from numpy.random import seed, normal, rand
 
 
 def mse(weights, target, X):
-    return (target-weights@X).mean()
+    return np.mean((target-weights@X)**2)
 
 
 class NumpyLinReg():
@@ -41,29 +41,8 @@ class NumpyLinReg():
             y += self.weights[i]*x**i
 
 
-if __name__ == "__main__":
-    seed(3050)
-
-    def f(x):
-        return -6*x**3 + x**2 - 3*x + 5
-
-    n = 100
-    a, b = -5, 5
-    x = np.linspace(a, b, n)
-
-    sigma = 200
-    noise = normal(0, sigma, n)
-    y = f(x) + noise
-
-    lin_reg = NumpyLinReg(x, y)
-    poly_deg = 3
-    gamma = 0.00001
-    epochs = 400
-    lin_reg.fit(poly_deg, gamma, epochs)
+def animate_fit(x, y, steps, file_name=None):
     n_steps = len(lin_reg.steps)
-    print(n_steps)
-
-    # Plotting
     fig, ax = plt.subplots()
     l = plt.scatter(x, y)
     ax = plt.axis([a*1.1, b*1.1, -1000, 1000])
@@ -81,9 +60,79 @@ if __name__ == "__main__":
         return line
 
     # create animation using the animate() function
-    myAnimation = animation.FuncAnimation(fig, animate, frames=range(0, n_steps, n_steps//400),
-                                          fargs=(lin_reg.steps,), interval=1, blit=False, repeat=True)
+    myAnimation = animation.FuncAnimation(fig, animate, frames=range(0, n_steps, n_steps//300),
+                                          fargs=(steps,), interval=30, blit=False, repeat=True)
 
-    # myAnimation.save('poly%d.gif' % poly_deg, writer='imagemagick')
+    if file_name:
+        myAnimation.save('%s.gif' % file_name, writer='imagemagick')
 
     plt.show()
+
+
+def plot_landscape_path(x, y, steps):
+
+    x = np.concatenate((np.ones((x.size, 1)), x.reshape(-1, 1)), axis=1)
+
+    w0_min = steps[:, 0].min() - 10
+    w0_max = steps[:, 0].max() + 40
+    w1_min = steps[:, 1].min() - 30
+    w1_max = steps[:, 1].max() + 10
+
+    n = 20
+
+    w0 = np.linspace(w0_min, w0_max, n)
+    w1 = np.linspace(w1_min, w1_max, n)
+
+    mse_grid = np.empty((n, n))
+
+    def mse(weights):
+        return np.mean((y-x@weights)**2)
+
+    for j in range(n):
+        for i in range(n):
+            mse_grid[i, j] = mse(np.array([w0[j], w1[i]]))
+
+    w0_grid, w1_grid = np.meshgrid(w0, w1)
+
+    from mpl_toolkits.mplot3d import axes3d
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    ax.plot_wireframe(w0_grid, w1_grid, mse_grid, rstride=3, cstride=3)
+
+    m = len(steps)
+    zs = np.empty(m)
+    for i in range(m):
+        zs[i] = mse(steps[i])
+
+    #ax.plot(steps[1:, 0], steps[1:, 1], zs[1:], 'rx', markersize=5)
+    ax.plot(steps[1:, 0], steps[1:, 1], zs[1:], 'r', linewidth=3)
+    ax.plot([steps[-1, 0]], [steps[-1, 1]], [zs[-1]], 'g*', markersize=15)
+
+    plt.show()
+
+
+if __name__ == "__main__":
+    seed(3050)
+
+    def f(x):
+        return -6*x**3 + x**2 - 3*x + 5
+
+    n = 100
+    a, b = -5, 5
+    x = np.linspace(a, b, n)
+
+    sigma = 200
+    noise = normal(0, sigma, n)
+    y = f(x) + noise
+
+    poly_deg = 1
+    gamma = 0.01
+    epochs = 300
+
+    lin_reg = NumpyLinReg(x, y)
+    lin_reg.fit(poly_deg, gamma, epochs)
+
+    # animate_fit(x, y, lin_reg.steps)
+    plot_landscape_path(x, y, lin_reg.steps)
